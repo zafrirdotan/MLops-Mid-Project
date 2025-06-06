@@ -19,4 +19,4 @@ def preprocess_data(dataset: pd.DataFrame) -> pd.DataFrame:
 
     dataset = dataset.join(pd.get_dummies(dataset['Contract']).astype(int))
 
-    return dataset[['TotalCharges', 'Month-to-month', 'One year', 'Two year', 'PhoneService', 'tenure']]
+    return dataset
