@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       job_to_run:
-        description: 'Which job to run'
+        description: "Which job to run"
         required: true
-        default: 'both'
+        default: "both"
         type: choice
         options:
           - import-csv
@@ -19,16 +19,18 @@ on:
 
 jobs:
   import-csv:
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && (github.event.inputs.job_to_run == 'import-csv' || github.event.inputs.job_to_run == 'both'))
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' && (github.event.inputs.job_to_run == 'import-csv' || github.event.inputs.job_to_run == 'both')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Install Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
-      - name: Set up Docker Compose
+
+      - name: Set up Docker Compose and Run Import CSV
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
@@ -37,24 +39,23 @@ jobs:
           docker-compose down
 
   scheduled-batch:
-    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (github.event.inputs.job_to_run == 'scheduled-batch' || github.event.inputs.job_to_run == 'both'))
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Install Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
-      - name: Set up Docker Compose and Run Import CSV
+
+      - name: Run Batch Steps (conditionally)
+        if: github.event_name == 'schedule' || github.event.inputs.job_to_run == 'scheduled-batch' || github.event.inputs.job_to_run == 'both'
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
         run: |
           docker-compose up -d mongo
           docker-compose run --rm import_csv
-      - name: Run Batch Runner
-        env:
-          MONGO_URI: ${{ secrets.MONGO_URI }}
-        run: |
           docker-compose run --rm batch
           docker-compose down
