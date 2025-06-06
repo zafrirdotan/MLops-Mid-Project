@@ -1,0 +1,39 @@
+services:
+  mongo:
+    image: mongo:6
+    container_name: mlops-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  import_csv:
+    build:
+      context: .
+      dockerfile: batch/Dockerfile
+    container_name: batch-import
+    volumes:
+      - ./batch/input_mock_data:/app/batch/input_mock_data
+      - ./common:/app/common
+    environment:
+      - MONGO_URI=${MONGO_URI}
+    depends_on:
+      - mongo
+    command: python batch/import_csv_runner.py
+
+  batch:
+    build:
+      context: . # ⬅️ Use the root folder as build context
+      dockerfile: batch/Dockerfile
+    container_name: mlops-batch
+    volumes:
+      - ./model:/app/model
+      - ./common:/app/common
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=${MONGO_URI}
+    command: python batch/batch_runner.py
+
+volumes:
+  mongo_data:
