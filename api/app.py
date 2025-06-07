@@ -22,7 +22,8 @@ def predict_row():
     print('DEBUG: data received:', data)
     if not data:
         return jsonify({'error': 'No input data provided'}), 400
-    # Convert to DataFrame
+    
+    # Convert JSON data to DataFrame without changing values
     row = pd.DataFrame([data])
     print('DEBUG: DataFrame columns:', row.columns.tolist())
     try:
