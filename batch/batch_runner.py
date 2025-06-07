@@ -1,4 +1,3 @@
-
 import pandas as pd
 import sys
 import os
@@ -30,3 +29,16 @@ prediction = predict(model, processed_data)
 
 # Print the prediction results
 print(prediction)
+
+# Combine customerID with predictions
+prediction_to_save = pd.DataFrame({
+    'customerID': data_set['customerID'],
+    'willDrop': prediction
+})
+
+# Save the predictions to MongoDB
+output_collection = get_mongo_collection("predictions")
+if output_collection.count_documents({}) > 0:
+    output_collection.drop()  # Clear existing predictions
+output_collection.insert_many(prediction_to_save.to_dict('records'))
+print("Predictions saved to MongoDB collection 'predictions'.")
