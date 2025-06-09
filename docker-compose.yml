@@ -35,5 +35,18 @@ services:
       - MONGO_URI=${MONGO_URI}
     command: python batch/batch_runner.py
 
+  api:
+    build:
+      context: . # ⬅️ Use the root folder as build context
+      dockerfile: api/Dockerfile
+    container_name: mlops-api
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./api:/app/api
+      - ./common:/app/common
+      - ./model:/app/model
+    command: python api/app.py
+
 volumes:
   mongo_data:

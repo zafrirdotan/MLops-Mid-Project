@@ -8,7 +8,6 @@ WORKDIR /app
 # Copy only what's needed
 COPY common common
 
-# COPY batch/input_mock_data/database_input.csv  batch/input_mock_data/database_input.csv
 COPY batch/import_csv_runner.py batch/import_csv_runner.py
 COPY batch/batch_runner.py batch/batch_runner.py
 COPY batch/db.py batch/db.py

@@ -3,9 +3,10 @@ from flask import Flask, jsonify, request
 import os
 import sys
 
-# Add the root directory to sys.path
+# Add the root directory to sys.path, this is used to get the common folder in venv
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from common.dto.Customer import CustomerDTO
 from common.model import load_model
 from common.preprocessing import preprocess_data
 from common.prediction import predict
@@ -13,19 +14,25 @@ from common.prediction import predict
 app = Flask(__name__)
 
 model_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../model/churn_model.pickle'))
+
 model = load_model(model_path)
 
 @app.route('/predict', methods=['POST'])
 def predict_row():
     # Get JSON data as DTO
-    data = request.get_json()
-    print('DEBUG: data received:', data)
-    if not data:
-        return jsonify({'error': 'No input data provided'}), 400
+    json_data = request.get_json()
     
-    # Convert JSON data to DataFrame without changing values
+    # Validate input data
+    if not json_data:
+        return jsonify({'error': 'No input data provided'}), 400
+    else:
+       # Convert JSON data to CustomerDTO and then to a dictionary 
+        data = CustomerDTO(**json_data).__dict__
+      
+    # Create a DataFrame from the data
     row = pd.DataFrame([data])
-    print('DEBUG: DataFrame columns:', row.columns.tolist())
+
+    # Preprocess the data and make predictions
     try:
         processed = preprocess_data(row)
         pred = predict(model, processed)
@@ -35,5 +42,3 @@ def predict_row():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
-
-

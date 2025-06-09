@@ -1,6 +1,7 @@
 import pickle
+from sklearn.ensemble import RandomForestClassifier
 
-def load_model(model_path):
+def load_model(model_path: str) -> RandomForestClassifier:
     """
     Load the pre-trained model from the specified path.
     

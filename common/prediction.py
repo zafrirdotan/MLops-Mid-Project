@@ -1,14 +1,8 @@
-def predict(rf_model, dataset):
-    """
-    Predicts the target variable using the provided random forest model and dataset.
+import pandas as pd
 
-    Parameters:
-    rf_model (RandomForestClassifier): The trained random forest model.
-    dataset (DataFrame): The dataset containing the features for prediction.
+from sklearn.ensemble import RandomForestClassifier
 
-    Returns:
-    Series: The predicted values.
-    """
+def predict(rf_model: RandomForestClassifier, dataset: pd.DataFrame) -> pd.Series:
     # Ensure the dataset contains the required columns
     required_columns = ['TotalCharges', 'Month-to-month', 'One year', 'Two year', 'PhoneService', 'tenure']
     
