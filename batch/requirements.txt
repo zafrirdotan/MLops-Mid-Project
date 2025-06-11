@@ -4,3 +4,4 @@ scikit-learn==1.2.2
 pymongo
 pydantic
 pandera==0.19.2
+elasticsearch==8.13.0

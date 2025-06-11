@@ -1,0 +1,24 @@
+{
+  "tenure": {
+    "mean": 32.37114865824223,
+    "std_dev": 24.55948102309446,
+    "min": 0.0,
+    "max": 72.0,
+    "missing_values": 0
+  },
+  "PhoneService": {
+    "unique_values": 2,
+    "most_frequent_value": "Yes",
+    "missing_values": 0
+  },
+  "Contract": {
+    "unique_values": 3,
+    "most_frequent_value": "Month-to-month",
+    "missing_values": 0
+  },
+  "TotalCharges": {
+    "unique_values": 6531,
+    "most_frequent_value": " ",
+    "missing_values": 0
+  }
+}
