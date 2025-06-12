@@ -35,6 +35,8 @@ class CustomerDTO(BaseModel):
     def replace_nan_with_none(cls, v):
         if isinstance(v, float) and math.isnan(v):
             return None
+        if isinstance(v, str) and v.strip() in ("", " ", "nan"):
+            return None
         return v
     
     @field_validator("TotalCharges", mode="before")

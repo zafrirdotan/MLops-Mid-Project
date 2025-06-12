@@ -7,8 +7,10 @@
     "missing_values": 0
   },
   "PhoneService": {
-    "unique_values": 2,
-    "most_frequent_value": "Yes",
+    "mean": 0.9031662643759761,
+    "std_dev": 0.29575223178363474,
+    "min": 0.0,
+    "max": 1.0,
     "missing_values": 0
   },
   "Contract": {
@@ -17,8 +19,31 @@
     "missing_values": 0
   },
   "TotalCharges": {
-    "unique_values": 6531,
-    "most_frequent_value": " ",
+    "mean": 2283.293724265228,
+    "std_dev": 2265.0002641704837,
+    "min": 18.8,
+    "max": 8684.8,
+    "missing_values": 0
+  },
+  "Month-to-month": {
+    "mean": 0.5501916796819537,
+    "std_dev": 0.49750973742109084,
+    "min": 0.0,
+    "max": 1.0,
+    "missing_values": 0
+  },
+  "One year": {
+    "mean": 0.20914383075394008,
+    "std_dev": 0.4067261693558549,
+    "min": 0.0,
+    "max": 1.0,
+    "missing_values": 0
+  },
+  "Two year": {
+    "mean": 0.24066448956410622,
+    "std_dev": 0.4275173022982705,
+    "min": 0.0,
+    "max": 1.0,
     "missing_values": 0
   }
 }

@@ -25,9 +25,9 @@ def predict_row():
     # Validate input data
     if not json_data:
         return jsonify({'error': 'No input data provided'}), 400
-    else:
-       # Convert JSON data to CustomerDTO and then to a dictionary 
-        data = CustomerDTO(**json_data).__dict__
+    
+    # Convert JSON data to CustomerDTO and then to a dictionary 
+    data = CustomerDTO(**json_data).__dict__
       
     # Create a DataFrame from the data
     row = pd.DataFrame([data])

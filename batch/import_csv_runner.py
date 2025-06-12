@@ -29,8 +29,9 @@ def import_customers_from_csv(csv_path: str, collection_name: str = "raw_inputs"
 
 
 def main():
-    csv_path = 'input_mock_data/original_dataset.csv'
+    csv_path = 'input_mock_data/database_input.csv'
     import_customers_from_csv(csv_path)
     
 if __name__ == "__main__":
     main()
+    # Import customers from a CSV file into MongoDB

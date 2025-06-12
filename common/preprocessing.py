@@ -1,5 +1,4 @@
 import pandas as pd
-from common.dto.Customer import CustomerSchema
 import logging
 
 def preprocess_data(dataset: pd.DataFrame) -> pd.DataFrame:

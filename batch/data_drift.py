@@ -45,4 +45,5 @@ def check_data_drift(current_df: pd.DataFrame, training_stats: dict, threshold: 
     if drift_report:
         logging.warning(f"Data drift detected: {drift_report}")
     else:
+        print("No significant data drift detected.")
         logging.info("No significant data drift detected.")
