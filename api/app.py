@@ -34,11 +34,29 @@ def predict_row():
 
     # Preprocess the data and make predictions
     try:
+        # Preprocess input data
         processed = preprocess_data(row)
-        pred = predict(model, processed)
+        # Make prediction
+        prediction = predict(model, processed)[0]
+        # Prepare response with selected fields and convert NumPy types to native Python types
+        processed_data = processed.iloc[0].to_dict()
+        def to_py(val):
+            if hasattr(val, "item"):
+                return val.item()
+            return val
+        response = {
+            'prediction': to_py(prediction),
+            'TotalCharges': to_py(processed_data.get('TotalCharges')),
+            'contract_type': to_py(processed_data.get('Contract')),
+            'PhoneService': to_py(processed_data.get('PhoneService')),
+            'tenure': to_py(processed_data.get('tenure'))
+        }
+        return jsonify(response)
+    
     except Exception as e:
         return jsonify({'error': str(e)}), 400
-    return jsonify({'prediction': int(pred[0])})
+    # Extract relevant fields for response
+ 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
