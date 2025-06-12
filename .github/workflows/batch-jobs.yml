@@ -19,7 +19,7 @@ on:
 
 jobs:
   import-csv:
-    if: github.event_name == 'workflow_dispatch' && (github.event.inputs.job_to_run == 'import-csv' || github.event.inputs.job_to_run == 'both')
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.job_to_run == 'import-csv'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,7 +39,7 @@ jobs:
           docker-compose down
 
   scheduled-batch:
-    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (github.event.inputs.job_to_run == 'scheduled-batch' || github.event.inputs.job_to_run == 'both'))
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' && (github.event.inputs.job_to_run == 'scheduled-batch' )
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
