@@ -1,3 +1,4 @@
+import math
 import pandera as pa
 from pandera.typing import Series
 
@@ -6,27 +7,36 @@ from typing import List, Literal, Optional
 
 
 class CustomerDTO(BaseModel):
-    customerID: str = Field(..., alias="customerID")
-    gender: Literal["Male", "Female"]
-    SeniorCitizen: Literal[0, 1]
-    Partner: Literal["Yes", "No"]
-    Dependents: Literal["Yes", "No"]
-    tenure: int
-    PhoneService: Literal["Yes", "No"]
-    MultipleLines: Literal["Yes", "No", "No phone service"]
-    InternetService: Literal["DSL", "Fiber optic", "No"]
-    OnlineSecurity: Literal["Yes", "No", "No internet service"]
-    OnlineBackup: Literal["Yes", "No", "No internet service"]
-    DeviceProtection: Literal["Yes", "No", "No internet service"]
-    TechSupport: Literal["Yes", "No", "No internet service"]
-    StreamingTV: Literal["Yes", "No", "No internet service"]
-    StreamingMovies: Literal["Yes", "No", "No internet service"]
-    Contract: Literal["Month-to-month", "One year", "Two year"]
-    PaperlessBilling: Literal["Yes", "No"]
-    PaymentMethod: str
-    MonthlyCharges: float
-    TotalCharges: Optional[float]
+    customerID: Optional[str] = Field(None, alias="customerID")
+    gender: Optional[Literal["Male", "Female"]] = None
+    SeniorCitizen: Optional[Literal[0, 1]] = None
+    Partner: Optional[Literal["Yes", "No"]] = None
+    Dependents: Optional[Literal["Yes", "No"]] = None
+    tenure: Optional[int] = None
+    PhoneService: Optional[Literal["Yes", "No"]] = None
+    MultipleLines: Optional[Literal["Yes", "No", "No phone service"]] = None
+    InternetService: Optional[Literal["DSL", "Fiber optic", "No"]] = None
+    OnlineSecurity: Optional[Literal["Yes", "No", "No internet service"]] = None
+    OnlineBackup: Optional[Literal["Yes", "No", "No internet service"]] = None
+    DeviceProtection: Optional[Literal["Yes", "No", "No internet service"]] = None
+    TechSupport: Optional[Literal["Yes", "No", "No internet service"]] = None
+    StreamingTV: Optional[Literal["Yes", "No", "No internet service"]] = None
+    StreamingMovies: Optional[Literal["Yes", "No", "No internet service"]] = None
+    Contract: Optional[Literal["Month-to-month", "One year", "Two year"]] = None
+    PaperlessBilling: Optional[Literal["Yes", "No"]] = None
+    PaymentMethod: Optional[str] = None
+    MonthlyCharges: Optional[float] = None
+    TotalCharges: Optional[float] = None
 
+
+
+    @field_validator("*", mode="before")
+    @classmethod
+    def replace_nan_with_none(cls, v):
+        if isinstance(v, float) and math.isnan(v):
+            return None
+        return v
+    
     @field_validator("TotalCharges", mode="before")
     @classmethod
     def parse_total_charges(cls, v):

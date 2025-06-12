@@ -26,36 +26,10 @@ model_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../model/c
 def get_paginated_data(collection: Collection, page_size: int = 1000) -> Generator[List[CustomerDTO], None, None]:
     """
     Generator to yield paginated data from a MongoDB collection.
-    
-    Parameters:
-    - collection: The MongoDB collection to query.
-    - page_size: Number of documents to return per page.
-    
-    Yields:
-    - List of documents from the collection.
     """
     total_documents = collection.count_documents({})
     for skip in range(0, total_documents, page_size):
         yield list(collection.find().skip(skip).limit(page_size))
-
-def preprocess_and_predict(data_set: pd.DataFrame, model: RandomForestClassifier) -> pd.DataFrame:
-    """
-    Preprocess the dataset and make predictions using the loaded model.
-    
-    Parameters:
-    - data_set: DataFrame containing the raw data.
-    
-    Returns:
-    - DataFrame with predictions.
-    """
-    processed_data = preprocess_data(data_set)
-    prediction = predict(model, processed_data)
-        
-    return pd.DataFrame({
-        'customerID': processed_data['customerID'],
-        'willDrop': prediction,
-        'date': pd.Timestamp.now()
-    })
 
 
 def main():
@@ -80,12 +54,24 @@ def main():
     for raw_docs in get_paginated_data(collection, page_size):
         if not raw_docs:
             continue
-        typed_docs = [CustomerDTO(**doc).model_dump(by_alias=True) for doc in raw_docs]
-        data_set = pd.DataFrame(typed_docs)
+        data_set = pd.DataFrame(raw_docs)
 
-        check_data_drift(data_set, training_stats, threshold=0.1)
+        # Convert raw_docs to CustomerDTO instances
+        customer_dtos = [CustomerDTO(**doc) for doc in raw_docs]
+        # Convert DTOs to DataFrame for preprocessing
+        data_set = pd.DataFrame([dto.__dict__ for dto in customer_dtos])
+        
+        processed_data = preprocess_data(data_set)
 
-        prediction_to_save = preprocess_and_predict(data_set, model)
+        check_data_drift(processed_data, training_stats, threshold=0.1)
+
+        prediction = predict(model, processed_data)
+        
+        prediction_to_save = pd.DataFrame({
+            'customerID': processed_data['customerID'],
+            'willDrop': prediction,
+            'date': pd.Timestamp.now()
+        })
         
         output_collection.insert_many(prediction_to_save.to_dict('records'))
         logging.info(f"Processed and saved {len(prediction_to_save)} predictions.")

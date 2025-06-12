@@ -15,6 +15,7 @@ services:
     volumes:
       - ./batch/input_mock_data:/app/batch/input_mock_data
       - ./common:/app/common
+      - ./logs:/app/logs
     environment:
       - MONGO_URI=${MONGO_URI}
     depends_on:
