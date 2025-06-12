@@ -8,18 +8,17 @@ on:
   workflow_dispatch:
     inputs:
       job_to_run:
-        description: "Which job to run"
+        description: "Select the job to run"
         required: true
-        default: "both"
+        default: "import-csv"
         type: choice
         options:
           - import-csv
           - scheduled-batch
-          - both
 
 jobs:
   import-csv:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.job_to_run == 'import-csv'
+    if: github.event_name == 'workflow_dispatch' && (github.event.inputs.job_to_run == 'import-csv')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -39,7 +38,7 @@ jobs:
           docker-compose down
 
   scheduled-batch:
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' && (github.event.inputs.job_to_run == 'scheduled-batch' )
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (github.event.inputs.job_to_run == 'scheduled-batch' ))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
