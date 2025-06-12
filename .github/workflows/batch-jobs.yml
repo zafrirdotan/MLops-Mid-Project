@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
   schedule:
-    - cron: "30 13 * * *" # Runs every day at 16:30 Israel time (UTC+3)
+    - cron: "0 0 * * *" # Runs daily at midnight
   workflow_dispatch:
     inputs:
       job_to_run:
